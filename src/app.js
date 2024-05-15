@@ -1,5 +1,12 @@
 import express from "express";
 import "dotenv/config";
+import mongoose from "mongoose";
+import User from "./models/User/index.js";
+
+mongoose
+  .connect(process.env.DB_GUI)
+  .then(console.log("DB connected"))
+  .catch((error) => console.error(error));
 
 const app = express();
 
@@ -16,6 +23,13 @@ app.post("/", (req, res) => {
   const { body, query, params } = req;
   const { id } = params;
   res.status(200).json({ body, query, id });
+});
+
+app.post("/register", async (req, res) => {
+  const { body } = req;
+  const { username, email, password } = body;
+  await User.create({ username, email, password });
+  res.status(201).json({ data: user });
 });
 
 app.listen(process.env.PORT || 8080, function () {
