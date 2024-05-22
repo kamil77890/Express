@@ -1,11 +1,10 @@
-import { compare, bcrypt } from "bcrypt";
 import { Schema, model } from "mongoose";
+import bcrypt from "bcrypt";
 
 const UserSchema = new Schema(
   {
     username: {
       type: String,
-      unique: true,
       required: true,
       minlength: 3,
       maxlength: 30,
@@ -14,17 +13,19 @@ const UserSchema = new Schema(
       type: String,
       unique: true,
       required: true,
+      select: false,
       match: /\S+@\S+\.\S+/,
     },
     password: {
       type: String,
       required: true,
-      minlength: 6,
+      minlength: 8,
       maxlength: 30,
+      select: false,
     },
     photo: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   {
@@ -48,6 +49,6 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
-const User = model("users", UserSchema);
+const User = model("User", UserSchema);
 
 export default User;
